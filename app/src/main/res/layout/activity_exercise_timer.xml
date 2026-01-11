@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvTimerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Push Ups"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="60sp"
+        android:layout_margin="32dp"/>
+
+    <TextView
+        android:id="@+id/tvPointsPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Earn 10 XP per minute"
+        android:textSize="16sp"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnFinishWorkout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Finish and Claim Points"
+        android:backgroundTint="#4CAF50"
+        android:padding="16dp"/>
+
+</LinearLayout>
