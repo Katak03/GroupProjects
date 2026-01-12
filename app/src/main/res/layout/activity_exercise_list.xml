@@ -10,4 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="24dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Add Exercise"
+        android:backgroundTint="#4CAF50"/>
+
+
+
 </RelativeLayout>

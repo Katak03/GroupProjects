@@ -124,5 +124,14 @@
             android:layout_marginTop="24dp"
             android:padding="16dp"/>
 
+        <Button
+            android:id="@+id/btnDeactivate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deactivate Exercise"
+            android:backgroundTint="#F44336"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" />
+
     </LinearLayout>
 </ScrollView>

@@ -3,7 +3,7 @@ package com.example.groupproject.remote;
 public class ApiUtils {
     // REST API server URL
     public static final String BASE_URL =
-            "http://10.0.2.2/prestige/";
+            " https://cuter-meghan-inutilely.ngrok-free.dev/prestige/";
 
     // return UserService instance
     // return UserService instance

@@ -13,7 +13,30 @@ public class User {
     private String role;
     private int is_active;
     private String secret;
-    private int totalCaloriesBurned;
+    private int total_calories_burned;
+
+    private Gamification gamification;
+
+    // Constructor
+    public User(int id, String username, String email, int totalCaloriesBurned) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.total_calories_burned = totalCaloriesBurned;
+
+        // Initialize empty gamification to avoid NullPointerException
+        this.gamification = new Gamification();
+        this.gamification.setId(id);
+    }
+
+    // --- NEW GETTER & SETTER ---
+    public Gamification getGamification() {
+        return gamification;
+    }
+
+    public void setGamification(Gamification gamification) {
+        this.gamification = gamification;
+    }
 
     public int getId() {
         return id;
@@ -88,9 +111,11 @@ public class User {
     }
 
     public int getTotalCaloriesBurned() {
-        return totalCaloriesBurned;
+        return total_calories_burned;
     }
     public void setTotalCaloriesBurned(int totalCaloriesBurned) {
-        this.totalCaloriesBurned = totalCaloriesBurned;
+        this.total_calories_burned = totalCaloriesBurned;
     }
+
+
 }

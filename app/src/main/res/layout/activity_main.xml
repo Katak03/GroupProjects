@@ -41,5 +41,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtHello" />
 
+    <Button
+        android:id="@+id/btnViewProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Profile"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="258dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

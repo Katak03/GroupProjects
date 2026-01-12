@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Exercise"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etExName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Exercise Name (e.g. Burpees)" />
+
+    <EditText
+        android:id="@+id/etExCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category (e.g. Cardio, Strength)"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etExCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calories per Minute"
+        android:inputType="number"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etExDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description / Instructions"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="* New exercises grant 10 XP per minute"
+        android:textSize="12sp"
+        android:textColor="#757575"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnSaveExercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Exercise"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#4CAF50"/>
+
+</LinearLayout>

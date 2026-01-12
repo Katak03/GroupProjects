@@ -49,7 +49,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button btnProfile = findViewById(R.id.btnViewProfile);
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
     }
+
+
+
+
 
     // Logout method (called via android:onClick in XML)
     public void doLogout(View view) {

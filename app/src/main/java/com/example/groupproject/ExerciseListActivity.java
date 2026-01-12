@@ -18,6 +18,7 @@ import com.example.groupproject.model.SharedPrefManager;
 import com.example.groupproject.model.User;
 import com.example.groupproject.remote.ApiUtils;
 import com.example.groupproject.remote.ExerciseService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -36,40 +37,45 @@ public class ExerciseListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
 
-        // 1. Initialize API Service
         exerciseService = ApiUtils.getExerciseService();
-
-        // 2. Bind RecyclerView
         rvExerciseList = findViewById(R.id.rvExerciseList);
-
-        // 3. Set Layout Manager
         rvExerciseList.setLayoutManager(new LinearLayoutManager(this));
         rvExerciseList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-        // 4. IMPORTANT: Register the RecyclerView for the Context Menu (Long Click)
         registerForContextMenu(rvExerciseList);
 
-        // 5. Fetch Data
+        FloatingActionButton fab = findViewById(R.id.fabAddExercise);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(ExerciseListActivity.this, AddExerciseActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // This runs every time the screen becomes visible (including after adding an exercise)
         fetchExercises();
     }
 
     private void fetchExercises() {
         User user = SharedPrefManager.getInstance(this).getUser();
-        String token = "";
-        if (user != null && user.getToken() != null) {
-            token = user.getToken();
-        } else {
+        if (user == null || user.getToken() == null) {
             Toast.makeText(this, "Please login first!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        String token = user.getToken();
         exerciseService.getAllExercises(token).enqueue(new Callback<List<Exercise>>() {
             @Override
             public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Exercise> exercises = response.body();
-                    adapter = new ExerciseAdapter(ExerciseListActivity.this, exercises);
-                    rvExerciseList.setAdapter(adapter);
+                    if (exercises.isEmpty()) {
+                        Toast.makeText(ExerciseListActivity.this, "No exercises available", Toast.LENGTH_SHORT).show();
+                    } else {
+                        adapter = new ExerciseAdapter(ExerciseListActivity.this, exercises);
+                        rvExerciseList.setAdapter(adapter);
+                    }
                 } else {
                     Toast.makeText(ExerciseListActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
@@ -80,22 +86,21 @@ public class ExerciseListActivity extends AppCompatActivity {
                 Toast.makeText(ExerciseListActivity.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    } // <--- END OF fetchExercises IS HERE. New methods start below.
+    }
 
     // -------------------------------------------------------------------
-    // Context Menu Logic (Must be OUTSIDE fetchExercises)
+    // Context Menu Logic
     // -------------------------------------------------------------------
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.setHeaderTitle("Select Action");
-        menu.add(0, 1, 0, "Details"); // groupId, itemId, order, title
+        menu.add(0, 1, 0, "Details");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        // Ensure adapter is not null before checking selection
         if (adapter != null) {
             Exercise selectedExercise = adapter.getSelectedItem();
             if (selectedExercise != null && item.getTitle().equals("Details")) {
@@ -107,8 +112,6 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private void doViewDetails(Exercise exercise) {
         Intent intent = new Intent(this, ExerciseDetailActivity.class);
-
-
         intent.putExtra("id", exercise.getId());
         intent.putExtra("name", exercise.getExerciseName());
         intent.putExtra("category", exercise.getCategory());
@@ -117,7 +120,6 @@ public class ExerciseListActivity extends AppCompatActivity {
         intent.putExtra("details", exercise.getExerciseDetails());
         intent.putExtra("exp_points", exercise.getExpPoints());
         intent.putExtra("status", exercise.getIsActive());
-
         startActivity(intent);
     }
 }
