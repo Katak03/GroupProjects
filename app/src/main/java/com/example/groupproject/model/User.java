@@ -17,6 +17,9 @@ public class User {
 
     private Gamification gamification;
 
+    public User() {
+    }
+
     // Constructor
     public User(int id, String username, String email, int totalCaloriesBurned) {
         this.id = id;

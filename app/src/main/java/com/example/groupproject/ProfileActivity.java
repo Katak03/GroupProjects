@@ -17,7 +17,8 @@ import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView tvUser, tvEmail, tvPhone, tvLevel, tvExp, tvTotal,tvCalories;
+    // Added tvWorkouts and tvMinutes
+    TextView tvUser, tvEmail, tvPhone, tvLevel, tvExp, tvTotal, tvCalories, tvWorkouts, tvMinutes;
     UserService userService;
 
     @Override
@@ -29,16 +30,21 @@ public class ProfileActivity extends AppCompatActivity {
         tvUser = findViewById(R.id.tvProfileUsername);
         tvEmail = findViewById(R.id.tvProfileEmail);
         tvPhone = findViewById(R.id.tvProfilePhone);
+
         tvLevel = findViewById(R.id.tvCurrentLevel);
-        tvExp = findViewById(R.id.tvCurrentExp);
         tvTotal = findViewById(R.id.tvTotalExp);
+        tvExp = findViewById(R.id.tvCurrentExp);
         tvCalories = findViewById(R.id.tvTotalCalories);
+
+        // NEW VIEWS
+        tvWorkouts = findViewById(R.id.tvTotalWorkouts);
+        tvMinutes = findViewById(R.id.tvTotalMinutes);
+
         Button btnBack = findViewById(R.id.btnBack);
 
         userService = ApiUtils.getUserService();
         User user = SharedPrefManager.getInstance(this).getUser();
 
-        // 2. Fetch Data from Server
         loadUserProfile(user.getId());
 
         btnBack.setOnClickListener(v -> finish());
@@ -56,17 +62,27 @@ public class ProfileActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(json);
 
                         if (obj.getBoolean("success")) {
-                            // 3. Set User Info
+                            // Basic Info
                             tvUser.setText(obj.getString("username"));
                             tvEmail.setText(obj.getString("email"));
-                            tvPhone.setText(obj.getString("phone")); // Will show "N/A" if null
+                            tvPhone.setText(obj.getString("phone"));
 
-                            // 4. Set Gamification Stats
+                            // Stats
                             tvLevel.setText(String.valueOf(obj.getInt("level")));
                             tvTotal.setText(String.valueOf(obj.getInt("total_exp")));
                             tvExp.setText("Current Progress: " + obj.getInt("current_exp") + " XP");
+
+                            // Calories
                             int cals = obj.optInt("calories", 0);
                             tvCalories.setText("Total Burned: " + cals + " kcal");
+
+                            // --- NEW STATS ---
+                            int workouts = obj.optInt("workouts", 0);
+                            int minutes = obj.optInt("total_minutes", 0);
+
+                            tvWorkouts.setText(String.valueOf(workouts));
+                            tvMinutes.setText(String.valueOf(minutes));
+
                         } else {
                             Toast.makeText(ProfileActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                         }

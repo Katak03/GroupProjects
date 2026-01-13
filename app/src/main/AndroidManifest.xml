@@ -43,6 +43,8 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity android:name=".SignupActivity" />
+
+        <activity android:name=".AdminDashboardActivity" />
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ExerciseService {
 
@@ -16,17 +17,11 @@ public interface ExerciseService {
      * Method: GET
      * Action: Retrieves a list of all exercises.
      */
-    @GET("api/exercise")
-    Call<List<Exercise>> getAllExercises(@Header("api-key") String apiKey);
+    @GET("api/exercise.php")
+    Call<List<Exercise>> getAllExercises(@Header("api-key") String apiKey, @Query("user_id") int userId);
 
-    /**
-     * URL: http://YOUR_DOMAIN/api/exercise/{id}
-     * Method: GET
-     * Action: Retrieves a single exercise by its ID.
-     */
     @GET("api/exercise/{id}")
     Call<Exercise> getExercise(@Header("api-key") String apiKey, @Path("id") int id);
-
     // If you need to search (Optional/Extra)
     // @GET("api/exercise/search/{name}")
     // Call<List<Exercise>> searchExercises(@Header("api-key") String apiKey, @Path("name") String name);

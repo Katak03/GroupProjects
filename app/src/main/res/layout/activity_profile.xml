@@ -29,9 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="..."
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"
-        android:textColor="#666666"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/tvProfilePhone"
@@ -39,15 +37,13 @@
         android:layout_height="wrap_content"
         android:text="..."
         android:textSize="16sp"
-        android:layout_marginTop="4dp"
-        android:textColor="#666666"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="24dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         android:background="#FFFFFF"
         android:elevation="4dp">
 
@@ -64,75 +60,123 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/tvCurrentLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#009688"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Current Level"/>
+                    android:text="Level"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/tvTotalExp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="32sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#FF9800"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lifetime XP"/>
+                    android:text="Total XP"/>
             </LinearLayout>
-        </LinearLayout> <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="16dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvTotalWorkouts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#3F51B5"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Workouts"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvTotalMinutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#E91E63"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Minutes"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvTotalCalories"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total Burned: 0 kcal"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:textColor="#D32F2F"/>
-    </LinearLayout>
 
         <TextView
             android:id="@+id/tvCurrentExp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Progress: 0 XP"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"/>
+            android:layout_marginTop="8dp"
+            android:gravity="center"/>
 
-    </LinearLayout> <Button
-    android:id="@+id/btnBack"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Close"
-    android:layout_marginTop="40dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_marginTop="24dp"/>
 
 </LinearLayout>

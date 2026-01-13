@@ -2,11 +2,10 @@ package com.example.groupproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.groupproject.model.SharedPrefManager;
@@ -14,6 +13,9 @@ import com.example.groupproject.model.User;
 import com.example.groupproject.remote.ApiUtils;
 import com.example.groupproject.remote.UserService;
 
+import org.json.JSONObject;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,89 +29,109 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login); // Set view first!
+        setContentView(R.layout.activity_login);
 
-        // 1. Check if already logged in
-        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false);
-
-        if (isLoggedIn) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+        // 1. Check if user is already logged in
+        if (SharedPrefManager.getInstance(this).isLoggedIn()) {
+            User user = SharedPrefManager.getInstance(this).getUser();
+            navigateToHome(user.getRole());
             return;
         }
 
-        // 2. Initialize Views and Service
-        edtUsername = findViewById(R.id.edtUsername);
+        // 2. Initialize Views
+        edtUsername = findViewById(R.id.edtUsername); // Make sure ID matches XML
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
-        userService = ApiUtils.getUserService(); // Initialize this HERE, not inside a button
+        userService = ApiUtils.getUserService();
 
-        // 3. Signup Button Logic
-        View tvSignup = findViewById(R.id.textViewRegister);
-        tvSignup.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-            startActivity(intent);
-        });
+        // 3. Register Button Logic
+        TextView tvRegister = findViewById(R.id.textViewRegister); // Make sure ID matches XML
+        if (tvRegister != null) {
+            tvRegister.setOnClickListener(v -> {
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+            });
+        }
 
         // 4. Login Button Logic
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = edtUsername.getText().toString().trim();
-                String password = edtPassword.getText().toString().trim();
+        btnLogin.setOnClickListener(v -> {
+            String username = edtUsername.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
 
-                if (validateLogin(username, password)) {
-                    doLogin(username, password);
-                }
+            if (!username.isEmpty() && !password.isEmpty()) {
+                doLogin(username, password);
+            } else {
+                Toast.makeText(LoginActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
             }
         });
-    } // <--- END OF ONCREATE
-
-    // --- HELPER METHODS MUST BE OUTSIDE ONCREATE ---
-
-    private boolean validateLogin(String username, String password) {
-        if (username == null || username.trim().isEmpty()) {
-            displayToast("Username is required");
-            return false;
-        }
-        if (password == null || password.trim().isEmpty()) {
-            displayToast("Password is required");
-            return false;
-        }
-        return true;
     }
 
     private void doLogin(String username, String password) {
-        Call<User> call = userService.login(username, password);
+        // This matches the 'Call<ResponseBody>' in UserService now
+        Call<ResponseBody> call = userService.login(username, password);
 
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    User user = response.body();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        // 1. Get the raw JSON from server
+                        String jsonString = response.body().string();
+                        JSONObject jsonObject = new JSONObject(jsonString);
 
-                    // Save session
-                    SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
+                        // 2. Check the "success" flag from your PHP
+                        if (jsonObject.getBoolean("success")) {
 
-                    // Go to Main
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                            // 3. Get the 'user' object inside the response
+                            JSONObject userJson = jsonObject.getJSONObject("user");
+
+                            // 4. Create User object
+                            User user = new User();
+                            user.setId(userJson.getInt("id"));
+                            user.setUsername(userJson.getString("username"));
+                            user.setEmail(userJson.getString("email"));
+
+                            // Get role (default to "user" if missing)
+                            String role = userJson.optString("role", "user");
+                            user.setRole(role);
+
+                            // 5. Save to Shared Preferences
+                            SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
+
+                            // 6. Redirect
+                            navigateToHome(role);
+
+                        } else {
+                            // Show the error message from PHP (e.g. "Invalid password")
+                            String message = jsonObject.getString("message");
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "Error parsing login data", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    displayToast("Login failed. Check credentials.");
+                    Toast.makeText(LoginActivity.this, "Server Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                displayToast("Error connecting to server: " + t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void displayToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    private void navigateToHome(String role) {
+        Intent intent;
+        if ("admin".equalsIgnoreCase(role)) {
+            intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        } else {
+            intent = new Intent(LoginActivity.this, MainActivity.class);
+        }
+        // Prevent going back to login screen
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

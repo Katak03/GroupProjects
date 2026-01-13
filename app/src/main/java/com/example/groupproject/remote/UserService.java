@@ -2,15 +2,19 @@ package com.example.groupproject.remote;
 
 import com.example.groupproject.model.User;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import okhttp3.ResponseBody;
+
 public interface UserService {
     @FormUrlEncoded
     @POST("api/login.php")
-    Call<User> login(@Field("username") String username, @Field("password") String
+    Call<ResponseBody> login(@Field("username") String username, @Field("password") String
             password);
 
 
@@ -61,6 +65,16 @@ public interface UserService {
             @Field("email") String email,
             @Field("phone") String phone  // This matches $_POST['phone'] in the PHP
     );
+
+    // 1. Get the list of users
+    @GET("api/get_all_users.php")
+    Call<List<User>> getAllUsers();
+
+    // 2. Delete a specific user
+    @FormUrlEncoded
+    @POST("api/delete_user.php")
+    Call<ResponseBody> deleteUser(@Field("user_id") int userId);
+
 }
 
 

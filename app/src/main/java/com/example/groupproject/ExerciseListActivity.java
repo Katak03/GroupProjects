@@ -53,23 +53,35 @@ public class ExerciseListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // This runs every time the screen becomes visible (including after adding an exercise)
         fetchExercises();
     }
 
     private void fetchExercises() {
         User user = SharedPrefManager.getInstance(this).getUser();
-        if (user == null || user.getToken() == null) {
+
+        if (user == null) {
             Toast.makeText(this, "Please login first!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String token = user.getToken();
-        exerciseService.getAllExercises(token).enqueue(new Callback<List<Exercise>>() {
+        // 1. Get the Token (Safety check)
+        String token = (user.getToken() != null) ? user.getToken() : "";
+
+        // 2. Get the User ID
+        // Make sure your User model has a getId() method!
+        int userId = user.getId();
+
+        // 3. Pass BOTH token AND userId to the service
+        // This will now send: .../api/exercise.php?user_id=7
+        exerciseService.getAllExercises(token, userId).enqueue(new Callback<List<Exercise>>() {
             @Override
             public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Exercise> exercises = response.body();
+
+                    // Debugging Tip: Check the log or Toast to see how many items returned
+                    // Toast.makeText(ExerciseListActivity.this, "Items: " + exercises.size(), Toast.LENGTH_SHORT).show();
+
                     if (exercises.isEmpty()) {
                         Toast.makeText(ExerciseListActivity.this, "No exercises available", Toast.LENGTH_SHORT).show();
                     } else {
